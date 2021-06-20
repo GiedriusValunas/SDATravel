@@ -6,6 +6,7 @@ import pro.sdacademy.travel.entity.Client;
 import java.sql.*;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,14 +38,7 @@ public class ClientRepository implements CRUDRepository<Integer, Client> {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    Client client = new Client();
-                    client.setId(rs.getInt("id"));
-                    client.setName(rs.getString("name"));
-                    client.setSurname(rs.getString("surname"));
-                    client.setBirthdate(Instant.ofEpochMilli(rs.getDate("birthdate").getTime())
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate());
-                    return Optional.of(client);
+                    return Optional.of(resultSetToClient(rs));
                 }
                 return Optional.empty();
             }
@@ -55,7 +49,18 @@ public class ClientRepository implements CRUDRepository<Integer, Client> {
 
     @Override
     public List<Client> findAll() {
-        return null;
+        try (Statement stmt = connection.createStatement()) {
+            String sql = "SELECT id, name, surname, birthdate FROM clients";
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                List<Client> results = new ArrayList<>();
+                while (rs.next()) {
+                    results.add(resultSetToClient(rs));
+                }
+                return results;
+            }
+        } catch (SQLException e) {
+            throw new SDATravelException(e);
+        }
     }
 
     @Override
@@ -65,6 +70,27 @@ public class ClientRepository implements CRUDRepository<Integer, Client> {
 
     @Override
     public void delete(Client entity) {
+        String sql = "DELETE FROM clients WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, entity.getId());
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new SDATravelException(e);
+        }
+    }
 
+    private static Client resultSetToClient(ResultSet resultSet) {
+        try {
+            Client client = new Client();
+            client.setId(resultSet.getInt("id"));
+            client.setName(resultSet.getString("name"));
+            client.setSurname(resultSet.getString("surname"));
+            client.setBirthdate(Instant.ofEpochMilli(resultSet.getDate("birthdate").getTime())
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate());
+            return client;
+        } catch (SQLException e) {
+            throw new SDATravelException(e);
+        }
     }
 }

@@ -28,7 +28,12 @@ public class SDATravel implements AutoCloseable {
     }
 
     public void run() {
-        System.out.println(clientRepository.find(1).orElse(null));
+//        System.out.println(clientRepository.find(1).orElse(null));
+//        testCreate();
+        Client c = new Client();
+        c.setId(2);
+        clientRepository.delete(c);
+        clientRepository.findAll().forEach(System.out::println);
     }
 
     public void testCreate() {
