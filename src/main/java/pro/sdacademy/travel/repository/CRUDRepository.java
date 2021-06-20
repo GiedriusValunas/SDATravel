@@ -1,9 +1,11 @@
 package pro.sdacademy.travel.repository;
 
+import pro.sdacademy.travel.entity.Entity;
+
 import java.util.List;
 import java.util.Optional;
 
-public interface CRUDRepository<ID, T> {
+public interface CRUDRepository<ID, T extends Entity<ID>> {
 
     // C
     void create(T entity);
@@ -18,4 +20,12 @@ public interface CRUDRepository<ID, T> {
 
     // D
     void delete(T entity);
+
+    default void save(T entity) {
+        if (entity.getId() == null) {
+            create(entity);
+        } else {
+            update(entity);
+        }
+    }
 }

@@ -2,18 +2,19 @@ package pro.sdacademy.travel.entity;
 
 import java.time.LocalDate;
 
-public class Client {
+public class Client implements Entity<Integer> {
 
-    private int id;
+    private Integer id;
     private String name;
     private String surname;
     private LocalDate birthdate;
 
-    public int getId() {
+    @Override
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
