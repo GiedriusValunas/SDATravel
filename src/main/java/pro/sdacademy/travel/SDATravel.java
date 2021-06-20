@@ -1,17 +1,16 @@
 package pro.sdacademy.travel;
 
-import pro.sdacademy.travel.entity.Client;
 import pro.sdacademy.travel.repository.ClientRepository;
+import pro.sdacademy.travel.repository.TripOrderRepository;
 import pro.sdacademy.travel.repository.TripRepository;
 import pro.sdacademy.travel.test.ClientTestCase;
 import pro.sdacademy.travel.test.TestRunner;
+import pro.sdacademy.travel.test.TripOrdersTestCase;
 import pro.sdacademy.travel.test.TripTestCase;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 public class SDATravel implements AutoCloseable {
 
@@ -22,12 +21,14 @@ public class SDATravel implements AutoCloseable {
     private Connection connection;
     private TripRepository tripRepository;
     private ClientRepository clientRepository;
+    private TripOrderRepository tripOrderRepository;
 
     public SDATravel(String dbUrl, String username, String password) {
         try {
             connection = DriverManager.getConnection(dbUrl, username, password);
             tripRepository = new TripRepository(connection);
             clientRepository = new ClientRepository(connection);
+            tripOrderRepository = new TripOrderRepository(connection, tripRepository, clientRepository);
 
         } catch (SQLException e) {
             throw new SDATravelException(e);
@@ -35,8 +36,11 @@ public class SDATravel implements AutoCloseable {
     }
 
     public void run() {
-//        TestRunner.runTests(new ClientTestCase(clientRepository));
-        TestRunner.runTests(new TripTestCase(tripRepository));
+        ClientTestCase clientTestCase = new ClientTestCase(clientRepository);
+//        TestRunner.runTests(clientTestCase);
+        TripTestCase tripTestCase = new TripTestCase(tripRepository);
+//        TestRunner.runTests(tripTestCase);
+        TestRunner.runTests(new TripOrdersTestCase(tripOrderRepository, clientTestCase, tripTestCase));
     }
 
     @Override

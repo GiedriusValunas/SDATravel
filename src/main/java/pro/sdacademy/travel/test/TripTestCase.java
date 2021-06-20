@@ -11,11 +11,12 @@ public class TripTestCase extends BaseTestCase<Trip, TripRepository> {
     }
 
     @Override
-    public void testCreate() {
+    public Trip testCreate() {
         Trip trip = new Trip();
         trip.setDestination("Tokyo");
         trip.setPrice(999.99);
         repository.create(trip);
+        return repository.findAll().stream().findFirst().orElseThrow(SDATravelException::new);
     }
 
     @Override

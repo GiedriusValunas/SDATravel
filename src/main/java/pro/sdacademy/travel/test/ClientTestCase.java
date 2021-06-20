@@ -14,12 +14,13 @@ public class ClientTestCase extends BaseTestCase<Client, ClientRepository> {
     }
 
     @Override
-    public void testCreate() {
+    public Client testCreate() {
         Client client = new Client();
         client.setName("John");
         client.setSurname("Smith");
         client.setBirthdate(LocalDate.now().minus(18, ChronoUnit.YEARS));
         repository.create(client);
+        return repository.findAll().stream().findFirst().orElseThrow(SDATravelException::new);
     }
 
     @Override

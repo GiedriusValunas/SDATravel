@@ -1,8 +1,10 @@
 package pro.sdacademy.travel.test;
 
-public interface TestCase {
+import pro.sdacademy.travel.entity.Entity;
 
-    void testCreate();
+public interface TestCase<T extends Entity<?>> {
+
+    T testCreate();
 
     void testRead();
 

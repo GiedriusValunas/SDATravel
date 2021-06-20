@@ -3,7 +3,7 @@ package pro.sdacademy.travel.test;
 import pro.sdacademy.travel.entity.Entity;
 import pro.sdacademy.travel.repository.CRUDRepository;
 
-public abstract class BaseTestCase<E extends Entity<?>, T extends CRUDRepository<?, E>> implements TestCase {
+public abstract class BaseTestCase<E extends Entity<?>, T extends CRUDRepository<?, E>> implements TestCase<E> {
 
     protected T repository;
 
