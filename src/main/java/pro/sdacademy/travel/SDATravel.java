@@ -2,6 +2,10 @@ package pro.sdacademy.travel;
 
 import pro.sdacademy.travel.entity.Client;
 import pro.sdacademy.travel.repository.ClientRepository;
+import pro.sdacademy.travel.repository.TripRepository;
+import pro.sdacademy.travel.test.ClientTestCase;
+import pro.sdacademy.travel.test.TestRunner;
+import pro.sdacademy.travel.test.TripTestCase;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,44 +20,23 @@ public class SDATravel implements AutoCloseable {
     private static final String PASSWORD = "Dd%UB#s7x5yxDrhD";
 
     private Connection connection;
+    private TripRepository tripRepository;
     private ClientRepository clientRepository;
 
     public SDATravel(String dbUrl, String username, String password) {
         try {
             connection = DriverManager.getConnection(dbUrl, username, password);
+            tripRepository = new TripRepository(connection);
             clientRepository = new ClientRepository(connection);
+
         } catch (SQLException e) {
             throw new SDATravelException(e);
         }
     }
 
     public void run() {
-        testUpdate();
-        testDelete();
-        clientRepository.findAll().forEach(System.out::println);
-    }
-
-    public void testCreate() {
-        Client client = new Client();
-        client.setName("John");
-        client.setSurname("Smith");
-        client.setBirthdate(LocalDate.now().minus(18, ChronoUnit.YEARS));
-        clientRepository.create(client);
-    }
-
-    public void testUpdate() {
-        Client c = new Client();
-        c.setId(2);
-        c.setName("Marry");
-        c.setSurname("Ann");
-        c.setBirthdate(LocalDate.now().minus(24, ChronoUnit.YEARS));
-        clientRepository.save(c);
-    }
-
-    public void testDelete() {
-        Client c = new Client();
-        c.setId(3);
-        clientRepository.delete(c);
+//        TestRunner.runTests(new ClientTestCase(clientRepository));
+        TestRunner.runTests(new TripTestCase(tripRepository));
     }
 
     @Override

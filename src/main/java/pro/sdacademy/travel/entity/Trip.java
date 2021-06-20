@@ -30,4 +30,13 @@ public class Trip implements Entity<Integer> {
     public void setPrice(Double price) {
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+        return "Trip{" +
+                "id=" + id +
+                ", destination='" + destination + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }

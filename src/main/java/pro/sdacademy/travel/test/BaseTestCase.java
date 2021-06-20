@@ -1,0 +1,23 @@
+package pro.sdacademy.travel.test;
+
+import pro.sdacademy.travel.entity.Entity;
+import pro.sdacademy.travel.repository.CRUDRepository;
+
+public abstract class BaseTestCase<E extends Entity<?>, T extends CRUDRepository<?, E>> implements TestCase {
+
+    protected T repository;
+
+    public BaseTestCase(T repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public void testRead() {
+        repository.findAll().forEach(System.out::println);
+    }
+
+    @Override
+    public void cleanup() {
+        repository.findAll().forEach(e -> repository.delete(e));
+    }
+}
