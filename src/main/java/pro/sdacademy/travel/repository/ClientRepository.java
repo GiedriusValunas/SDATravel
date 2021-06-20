@@ -65,7 +65,16 @@ public class ClientRepository implements CRUDRepository<Integer, Client> {
 
     @Override
     public void update(Client entity) {
-
+        String sql = "UPDATE clients SET name=?, surname=?, birthdate=? WHERE id=?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, entity.getName());
+            stmt.setString(2, entity.getSurname());
+            stmt.setDate(3, Date.valueOf(entity.getBirthdate()));
+            stmt.setInt(4, entity.getId());
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new SDATravelException(e);
+        }
     }
 
     @Override

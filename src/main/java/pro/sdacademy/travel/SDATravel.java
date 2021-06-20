@@ -28,11 +28,8 @@ public class SDATravel implements AutoCloseable {
     }
 
     public void run() {
-//        System.out.println(clientRepository.find(1).orElse(null));
-//        testCreate();
-        Client c = new Client();
-        c.setId(2);
-        clientRepository.delete(c);
+        testUpdate();
+        testDelete();
         clientRepository.findAll().forEach(System.out::println);
     }
 
@@ -42,6 +39,21 @@ public class SDATravel implements AutoCloseable {
         client.setSurname("Smith");
         client.setBirthdate(LocalDate.now().minus(18, ChronoUnit.YEARS));
         clientRepository.create(client);
+    }
+
+    public void testUpdate() {
+        Client c = new Client();
+        c.setId(2);
+        c.setName("Marry");
+        c.setSurname("Ann");
+        c.setBirthdate(LocalDate.now().minus(24, ChronoUnit.YEARS));
+        clientRepository.save(c);
+    }
+
+    public void testDelete() {
+        Client c = new Client();
+        c.setId(3);
+        clientRepository.delete(c);
     }
 
     @Override
