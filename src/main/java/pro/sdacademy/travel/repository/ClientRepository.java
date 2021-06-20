@@ -3,10 +3,9 @@ package pro.sdacademy.travel.repository;
 import pro.sdacademy.travel.SDATravelException;
 import pro.sdacademy.travel.entity.Client;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,8 +31,26 @@ public class ClientRepository implements CRUDRepository<Integer, Client> {
     }
 
     @Override
-    public Optional<Client> find(Integer integer) {
-        return Optional.empty();
+    public Optional<Client> find(Integer id) {
+        String sql = "SELECT id, name, surname, birthdate FROM clients WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Client client = new Client();
+                    client.setId(rs.getInt("id"));
+                    client.setName(rs.getString("name"));
+                    client.setSurname(rs.getString("surname"));
+                    client.setBirthdate(Instant.ofEpochMilli(rs.getDate("birthdate").getTime())
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate());
+                    return Optional.of(client);
+                }
+                return Optional.empty();
+            }
+        } catch (SQLException e) {
+            throw new SDATravelException(e);
+        }
     }
 
     @Override
