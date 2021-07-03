@@ -1,7 +1,13 @@
 package pro.sdacademy.travel.entity;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "trips")
 public class Trip implements DbEntity<Integer> {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String destination;
     private Double price;

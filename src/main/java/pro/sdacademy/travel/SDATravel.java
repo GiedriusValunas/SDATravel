@@ -3,6 +3,7 @@ package pro.sdacademy.travel;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import pro.sdacademy.travel.entity.Client;
+import pro.sdacademy.travel.entity.Trip;
 import pro.sdacademy.travel.repository.ClientRepository;
 import pro.sdacademy.travel.repository.TripOrderRepository;
 import pro.sdacademy.travel.repository.TripRepository;
@@ -31,13 +32,14 @@ public class SDATravel implements AutoCloseable {
         SessionFactory sessionFactory = new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(Client.class)
+                .addAnnotatedClass(Trip.class)
                 .buildSessionFactory();
 
         EntityManager entityManager = sessionFactory.createEntityManager();
 
         try {
             connection = DriverManager.getConnection(dbUrl, username, password);
-            tripRepository = new TripRepository(connection);
+            tripRepository = new TripRepository(entityManager);
             clientRepository = new ClientRepository(entityManager);
             tripOrderRepository = new TripOrderRepository(connection, tripRepository, clientRepository);
 
