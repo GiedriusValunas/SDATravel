@@ -1,12 +1,23 @@
 package pro.sdacademy.travel.entity;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "trip_orders")
 public class TripOrder implements DbEntity<Integer> {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @ManyToOne
     private Client client;
+
+    @ManyToOne
     private Trip trip;
+
+    @Column(name = "trip_date")
     private LocalDate tripDate;
 
     @Override

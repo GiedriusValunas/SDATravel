@@ -1,5 +1,7 @@
 package pro.sdacademy.travel.test;
 
+import pro.sdacademy.travel.entity.DbEntity;
+
 public class TestRunner {
 
     public static void runTests(TestCase testCase) {
@@ -10,16 +12,16 @@ public class TestRunner {
 
         System.out.println("--- Create 3 records ---");
         testCase.testCreate();
-        testCase.testCreate();
-        testCase.testCreate();
+        DbEntity<?> obj2 = testCase.testCreate();
+        DbEntity<?> obj3 = testCase.testCreate();
         testCase.testRead();
 
         System.out.println("--- Update 2nd record ---");
-        testCase.testUpdate();
+        testCase.testUpdate(obj2);
         testCase.testRead();
 
         System.out.println("--- Delete 3rd record ---");
-        testCase.testDelete();
+        testCase.testDelete(obj3);
         testCase.testRead();
         System.out.println("============================");
     }

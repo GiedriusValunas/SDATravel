@@ -6,17 +6,10 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
-public class TripRepository implements CRUDRepository<Integer, Trip> {
-
-    private final EntityManager entityManager;
+public class TripRepository extends AbstractCRUDRepository<Integer, Trip> {
 
     public TripRepository(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
-    @Override
-    public void create(Trip trip) {
-        entityManager.persist(trip);
+        super(entityManager);
     }
 
     @Override
@@ -27,15 +20,5 @@ public class TripRepository implements CRUDRepository<Integer, Trip> {
     @Override
     public List<Trip> findAll() {
         return entityManager.createQuery("FROM Trip", Trip.class).getResultList();
-    }
-
-    @Override
-    public void update(Trip trip) {
-        entityManager.persist(trip);
-    }
-
-    @Override
-    public void delete(Trip entity) {
-        entityManager.remove(entity);
     }
 }

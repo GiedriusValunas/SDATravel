@@ -8,5 +8,6 @@
         <property name="connection.password">Dd%UB#s7x5yxDrhD</property>
         <property name="connection.pool_size">5</property>
         <property name="show_sql">true</property>
+        <property name="hbm2ddl.auto">create-drop</property>
     </session-factory>
 </hibernate-configuration>

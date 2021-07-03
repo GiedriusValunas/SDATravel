@@ -19,28 +19,20 @@ public class ClientTestCase extends BaseTestCase<Client, ClientRepository> {
         client.setName("John");
         client.setSurname("Smith");
         client.setBirthdate(LocalDate.now().minus(18, ChronoUnit.YEARS));
-        repository.create(client);
-        return repository.findAll().stream().findFirst().orElseThrow(SDATravelException::new);
+        repository.save(client);
+        return client;
     }
 
     @Override
-    public void testUpdate() {
-        Client c = repository.findAll().stream()
-                .skip(1)
-                .findFirst()
-                .orElseThrow(SDATravelException::new);
-        c.setName("Marry");
-        c.setSurname("Ann");
-        c.setBirthdate(LocalDate.now().minus(24, ChronoUnit.YEARS));
-        repository.save(c);
+    public void testUpdate(Client client) {
+        client.setName("Marry");
+        client.setSurname("Ann");
+        client.setBirthdate(LocalDate.now().minus(24, ChronoUnit.YEARS));
+        repository.save(client);
     }
 
     @Override
-    public void testDelete() {
-        Client c = repository.findAll().stream()
-                .skip(2)
-                .findFirst()
-                .orElseThrow(SDATravelException::new);
-        repository.delete(c);
+    public void testDelete(Client client) {
+        repository.delete(client);
     }
 }

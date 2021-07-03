@@ -1,6 +1,5 @@
 package pro.sdacademy.travel.test;
 
-import pro.sdacademy.travel.SDATravelException;
 import pro.sdacademy.travel.entity.TripOrder;
 import pro.sdacademy.travel.repository.TripOrderRepository;
 
@@ -28,26 +27,18 @@ public class TripOrdersTestCase extends BaseTestCase<TripOrder, TripOrderReposit
         order.setClient(clientTestCase.testCreate());
         order.setTrip(tripTestCase.testCreate());
         order.setTripDate(LocalDate.now().plus(6, ChronoUnit.MONTHS));
-        repository.create(order);
-        return repository.findAll().stream().findFirst().orElseThrow(SDATravelException::new);
+        repository.save(order);
+        return order;
     }
 
     @Override
-    public void testUpdate() {
-        TripOrder o = repository.findAll().stream()
-                .skip(1)
-                .findFirst()
-                .orElseThrow(SDATravelException::new);
-        o.setTripDate(LocalDate.now().plus(9, ChronoUnit.MONTHS));
-        repository.save(o);
+    public void testUpdate(TripOrder order) {
+        order.setTripDate(LocalDate.now().plus(9, ChronoUnit.MONTHS));
+        repository.save(order);
     }
 
     @Override
-    public void testDelete() {
-        TripOrder o = repository.findAll().stream()
-                .skip(2)
-                .findFirst()
-                .orElseThrow(SDATravelException::new);
-        repository.delete(o);
+    public void testDelete(TripOrder order) {
+        repository.delete(order);
     }
 }

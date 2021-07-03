@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import pro.sdacademy.travel.entity.Client;
 import pro.sdacademy.travel.entity.Trip;
+import pro.sdacademy.travel.entity.TripOrder;
 import pro.sdacademy.travel.repository.ClientRepository;
 import pro.sdacademy.travel.repository.TripOrderRepository;
 import pro.sdacademy.travel.repository.TripRepository;
@@ -13,39 +14,26 @@ import pro.sdacademy.travel.test.TripOrdersTestCase;
 import pro.sdacademy.travel.test.TripTestCase;
 
 import javax.persistence.EntityManager;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public class SDATravel implements AutoCloseable {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/sdatravel";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "Dd%UB#s7x5yxDrhD";
-
-    private Connection connection;
+    private EntityManager entityManager;
     private TripRepository tripRepository;
     private ClientRepository clientRepository;
     private TripOrderRepository tripOrderRepository;
 
-    public SDATravel(String dbUrl, String username, String password) {
+    public SDATravel() {
         SessionFactory sessionFactory = new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(Client.class)
                 .addAnnotatedClass(Trip.class)
+                .addAnnotatedClass(TripOrder.class)
                 .buildSessionFactory();
 
-        EntityManager entityManager = sessionFactory.createEntityManager();
-
-        try {
-            connection = DriverManager.getConnection(dbUrl, username, password);
-            tripRepository = new TripRepository(entityManager);
-            clientRepository = new ClientRepository(entityManager);
-            tripOrderRepository = new TripOrderRepository(connection, tripRepository, clientRepository);
-
-        } catch (SQLException e) {
-            throw new SDATravelException(e);
-        }
+        entityManager = sessionFactory.createEntityManager();
+        tripRepository = new TripRepository(entityManager);
+        clientRepository = new ClientRepository(entityManager);
+        tripOrderRepository = new TripOrderRepository(entityManager);
     }
 
     public void run() {
@@ -57,12 +45,12 @@ public class SDATravel implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
-        connection.close();
+    public void close() {
+        entityManager.close();
     }
 
-    public static void main(String[] args) throws Exception {
-        try (SDATravel travelApp = new SDATravel(DB_URL, USERNAME, PASSWORD)) {
+    public static void main(String[] args) {
+        try (SDATravel travelApp = new SDATravel()) {
             travelApp.run();
         }
     }

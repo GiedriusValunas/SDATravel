@@ -8,9 +8,9 @@ public interface TestCase<T extends DbEntity<?>> {
 
     void testRead();
 
-    void testUpdate();
+    void testUpdate(T entity);
 
-    void testDelete();
+    void testDelete(T entity);
 
     void cleanup();
 }
