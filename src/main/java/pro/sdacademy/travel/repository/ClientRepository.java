@@ -26,7 +26,7 @@ public class ClientRepository implements CRUDRepository<Integer, Client> {
 
     @Override
     public List<Client> findAll() {
-        return entityManager.createQuery("from Client", Client.class).getResultList();
+        return entityManager.createQuery("FROM Client", Client.class).getResultList();
     }
 
     @Override
