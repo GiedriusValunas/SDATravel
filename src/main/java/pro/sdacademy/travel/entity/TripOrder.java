@@ -12,6 +12,7 @@ public class TripOrder implements DbEntity<Integer> {
     private Integer id;
 
     @ManyToOne
+    @JoinColumn(name = "client_id")
     private Client client;
 
     @ManyToOne
@@ -57,8 +58,8 @@ public class TripOrder implements DbEntity<Integer> {
     public String toString() {
         return "TripOrder{" +
                 "id=" + id +
-                ", client=" + client +
-                ", trip=" + trip +
+                ", clientId=" + client.getId() +
+                ", tripId=" + trip.getId() +
                 ", tripDate=" + tripDate +
                 '}';
     }

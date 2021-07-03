@@ -42,6 +42,7 @@ public class SDATravel implements AutoCloseable {
         TripTestCase tripTestCase = new TripTestCase(tripRepository);
 //        TestRunner.runTests(tripTestCase);
         TestRunner.runTests(new TripOrdersTestCase(tripOrderRepository, clientTestCase, tripTestCase));
+        clientRepository.findAll().forEach(System.out::println);
     }
 
     @Override
