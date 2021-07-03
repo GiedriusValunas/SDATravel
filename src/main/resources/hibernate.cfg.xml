@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration SYSTEM
+        "http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">jdbc:mysql://localhost:3306/sdatravel</property>
+        <property name="connection.username">root</property>
+        <property name="connection.password">Dd%UB#s7x5yxDrhD</property>
+        <property name="connection.pool_size">5</property>
+    </session-factory>
+</hibernate-configuration>
