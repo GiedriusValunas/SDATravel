@@ -1,6 +1,6 @@
 package pro.sdacademy.travel.entity;
 
-public interface Entity<ID> {
+public interface DbEntity<ID> {
 
     ID getId();
 }

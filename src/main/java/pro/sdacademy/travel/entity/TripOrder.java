@@ -2,7 +2,7 @@ package pro.sdacademy.travel.entity;
 
 import java.time.LocalDate;
 
-public class TripOrder implements Entity<Integer> {
+public class TripOrder implements DbEntity<Integer> {
 
     private Integer id;
     private Client client;

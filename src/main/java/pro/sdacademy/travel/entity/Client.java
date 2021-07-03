@@ -1,9 +1,14 @@
 package pro.sdacademy.travel.entity;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
-public class Client implements Entity<Integer> {
+@Entity
+@Table(name = "clients")
+public class Client implements DbEntity<Integer> {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private String surname;

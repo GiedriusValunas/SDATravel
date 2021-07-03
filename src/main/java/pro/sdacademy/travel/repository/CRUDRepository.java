@@ -1,11 +1,11 @@
 package pro.sdacademy.travel.repository;
 
-import pro.sdacademy.travel.entity.Entity;
+import pro.sdacademy.travel.entity.DbEntity;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CRUDRepository<ID, T extends Entity<ID>> {
+public interface CRUDRepository<ID, T extends DbEntity<ID>> {
 
     // C
     void create(T entity);

@@ -1,105 +1,41 @@
 package pro.sdacademy.travel.repository;
 
-import pro.sdacademy.travel.SDATravelException;
 import pro.sdacademy.travel.entity.Client;
 
-import java.sql.*;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
 public class ClientRepository implements CRUDRepository<Integer, Client> {
 
-    private final Connection connection;
+    private final EntityManager entityManager;
 
-    public ClientRepository(Connection connection) {
-        this.connection = connection;
+    public ClientRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     @Override
     public void create(Client client) {
-        String sql = "INSERT INTO clients (name, surname, birthdate) VALUES (?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, client.getName());
-            stmt.setString(2, client.getSurname());
-            stmt.setDate(3, Date.valueOf(client.getBirthdate()));
-            stmt.execute();
-        } catch (SQLException e) {
-            throw new SDATravelException(e);
-        }
+        entityManager.persist(client);
     }
 
     @Override
     public Optional<Client> find(Integer id) {
-        String sql = "SELECT id, name, surname, birthdate FROM clients WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return Optional.of(resultSetToClient(rs));
-                }
-                return Optional.empty();
-            }
-        } catch (SQLException e) {
-            throw new SDATravelException(e);
-        }
+        return Optional.ofNullable(entityManager.find(Client.class, id));
     }
 
     @Override
     public List<Client> findAll() {
-        try (Statement stmt = connection.createStatement()) {
-            String sql = "SELECT id, name, surname, birthdate FROM clients";
-            try (ResultSet rs = stmt.executeQuery(sql)) {
-                List<Client> results = new ArrayList<>();
-                while (rs.next()) {
-                    results.add(resultSetToClient(rs));
-                }
-                return results;
-            }
-        } catch (SQLException e) {
-            throw new SDATravelException(e);
-        }
+        return entityManager.createQuery("from Client", Client.class).getResultList();
     }
 
     @Override
-    public void update(Client entity) {
-        String sql = "UPDATE clients SET name=?, surname=?, birthdate=? WHERE id=?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, entity.getName());
-            stmt.setString(2, entity.getSurname());
-            stmt.setDate(3, Date.valueOf(entity.getBirthdate()));
-            stmt.setInt(4, entity.getId());
-            stmt.execute();
-        } catch (SQLException e) {
-            throw new SDATravelException(e);
-        }
+    public void update(Client client) {
+        entityManager.persist(client);
     }
 
     @Override
-    public void delete(Client entity) {
-        String sql = "DELETE FROM clients WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, entity.getId());
-            stmt.execute();
-        } catch (SQLException e) {
-            throw new SDATravelException(e);
-        }
-    }
-
-    private static Client resultSetToClient(ResultSet resultSet) {
-        try {
-            Client client = new Client();
-            client.setId(resultSet.getInt("id"));
-            client.setName(resultSet.getString("name"));
-            client.setSurname(resultSet.getString("surname"));
-            client.setBirthdate(Instant.ofEpochMilli(resultSet.getDate("birthdate").getTime())
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate());
-            return client;
-        } catch (SQLException e) {
-            throw new SDATravelException(e);
-        }
+    public void delete(Client client) {
+        entityManager.remove(client);
     }
 }

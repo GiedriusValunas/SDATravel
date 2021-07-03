@@ -1,6 +1,6 @@
 package pro.sdacademy.travel.entity;
 
-public class Trip implements Entity<Integer> {
+public class Trip implements DbEntity<Integer> {
 
     private Integer id;
     private String destination;

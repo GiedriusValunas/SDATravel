@@ -2,6 +2,7 @@ package pro.sdacademy.travel;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import pro.sdacademy.travel.entity.Client;
 import pro.sdacademy.travel.repository.ClientRepository;
 import pro.sdacademy.travel.repository.TripOrderRepository;
 import pro.sdacademy.travel.repository.TripRepository;
@@ -10,6 +11,7 @@ import pro.sdacademy.travel.test.TestRunner;
 import pro.sdacademy.travel.test.TripOrdersTestCase;
 import pro.sdacademy.travel.test.TripTestCase;
 
+import javax.persistence.EntityManager;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -28,12 +30,15 @@ public class SDATravel implements AutoCloseable {
     public SDATravel(String dbUrl, String username, String password) {
         SessionFactory sessionFactory = new Configuration()
                 .configure("hibernate.cfg.xml")
+                .addAnnotatedClass(Client.class)
                 .buildSessionFactory();
+
+        EntityManager entityManager = sessionFactory.createEntityManager();
 
         try {
             connection = DriverManager.getConnection(dbUrl, username, password);
             tripRepository = new TripRepository(connection);
-            clientRepository = new ClientRepository(connection);
+            clientRepository = new ClientRepository(entityManager);
             tripOrderRepository = new TripOrderRepository(connection, tripRepository, clientRepository);
 
         } catch (SQLException e) {
