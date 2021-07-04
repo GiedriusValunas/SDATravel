@@ -3,38 +3,39 @@ package pro.sdacademy.travel;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import pro.sdacademy.travel.entity.*;
-import pro.sdacademy.travel.repository.BillRepository;
-import pro.sdacademy.travel.repository.ClientRepository;
-import pro.sdacademy.travel.repository.TripOrderRepository;
-import pro.sdacademy.travel.repository.TripRepository;
+import pro.sdacademy.travel.repository.*;
 import pro.sdacademy.travel.test.*;
 
 import javax.persistence.EntityManager;
 
 public class SDATravel implements AutoCloseable {
 
-    private EntityManager entityManager;
-    private TripRepository tripRepository;
-    private ClientRepository clientRepository;
-    private TripOrderRepository tripOrderRepository;
-    private BillRepository billRepository;
+    private final EntityManager entityManager;
+    private final BillRepository billRepository;
+    private final TripRepository tripRepository;
+    private final ClientRepository clientRepository;
+    private final TransportRepository transportRepository;
+    private final TripOrderRepository tripOrderRepository;
 
     public SDATravel() {
         SessionFactory sessionFactory = new Configuration()
                 .configure("hibernate.cfg.xml")
+                .addAnnotatedClass(Bill.class)
                 .addAnnotatedClass(Client.class)
                 .addAnnotatedClass(Destination.class)
                 .addAnnotatedClass(Itinerary.class)
+                .addAnnotatedClass(Transport.class)
                 .addAnnotatedClass(Trip.class)
                 .addAnnotatedClass(TripOrder.class)
-                .addAnnotatedClass(Bill.class)
                 .buildSessionFactory();
 
         entityManager = sessionFactory.createEntityManager();
+        billRepository = new BillRepository(entityManager);
         tripRepository = new TripRepository(entityManager);
         clientRepository = new ClientRepository(entityManager);
+        transportRepository = new TransportRepository(entityManager);
         tripOrderRepository = new TripOrderRepository(entityManager);
-        billRepository = new BillRepository(entityManager);
+
     }
 
     public void run() {
@@ -49,6 +50,9 @@ public class SDATravel implements AutoCloseable {
 
         BillTestCase billTestCase = new BillTestCase(billRepository, clientTestCase, tripTestCase);
         TestRunner.runTests(billTestCase);
+
+        TransportTestCase transportTestCase = new TransportTestCase(transportRepository);
+        TestRunner.runTests(transportTestCase);
     }
 
     @Override

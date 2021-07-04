@@ -30,9 +30,4 @@ public class ClientTestCase extends BaseTestCase<Client, ClientRepository> {
         client.setBirthdate(LocalDate.now().minus(24, ChronoUnit.YEARS));
         repository.save(client);
     }
-
-    @Override
-    public void testDelete(Client client) {
-        repository.delete(client);
-    }
 }

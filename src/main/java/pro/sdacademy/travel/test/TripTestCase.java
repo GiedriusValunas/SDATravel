@@ -24,15 +24,8 @@ public class TripTestCase extends BaseTestCase<Trip, TripRepository> {
 
     private Itinerary createItinerary(String from, String to) {
         Itinerary itinerary = new Itinerary();
-
-        Destination destinationFrom = new Destination();
-        destinationFrom.setName(from);
-        itinerary.setDestinationFrom(destinationFrom);
-
-        Destination destinationTo = new Destination();
-        destinationTo.setName(to);
-        itinerary.setDestinationTo(destinationTo);
-
+        itinerary.setDestinationFrom(new Destination(from));
+        itinerary.setDestinationTo(new Destination(to));
         itinerary.setTravelDateTime(LocalDateTime.now());
         return itinerary;
     }
@@ -41,10 +34,5 @@ public class TripTestCase extends BaseTestCase<Trip, TripRepository> {
     public void testUpdate(Trip trip) {
         trip.setPrice(299.49);
         repository.save(trip);
-    }
-
-    @Override
-    public void testDelete(Trip trip) {
-        repository.delete(trip);
     }
 }

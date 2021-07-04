@@ -21,7 +21,6 @@ public class Bill implements DbEntity<Integer> {
 
     private LocalDateTime cleared;
 
-
     public Integer getId() {
         return id;
     }

@@ -36,9 +36,4 @@ public class TripOrdersTestCase extends BaseTestCase<TripOrder, TripOrderReposit
         order.setTripDate(LocalDate.now().plus(9, ChronoUnit.MONTHS));
         repository.save(order);
     }
-
-    @Override
-    public void testDelete(TripOrder order) {
-        repository.delete(order);
-    }
 }

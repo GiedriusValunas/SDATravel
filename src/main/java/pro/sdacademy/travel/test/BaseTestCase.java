@@ -17,6 +17,11 @@ public abstract class BaseTestCase<E extends DbEntity<?>, T extends CRUDReposito
     }
 
     @Override
+    public void testDelete(E entity) {
+        repository.delete(entity);
+    }
+
+    @Override
     public void cleanup() {
         repository.findAll().forEach(e -> repository.delete(e));
     }

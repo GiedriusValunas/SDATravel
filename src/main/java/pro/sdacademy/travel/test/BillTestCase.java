@@ -30,9 +30,4 @@ public class BillTestCase extends BaseTestCase<Bill, BillRepository> {
         bill.setCleared(LocalDateTime.now().plusDays(1));
         repository.save(bill);
     }
-
-    @Override
-    public void testDelete(Bill bill) {
-        repository.delete(bill);
-    }
 }
