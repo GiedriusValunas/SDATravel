@@ -3,13 +3,11 @@ package pro.sdacademy.travel;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import pro.sdacademy.travel.entity.*;
+import pro.sdacademy.travel.repository.BillRepository;
 import pro.sdacademy.travel.repository.ClientRepository;
 import pro.sdacademy.travel.repository.TripOrderRepository;
 import pro.sdacademy.travel.repository.TripRepository;
-import pro.sdacademy.travel.test.ClientTestCase;
-import pro.sdacademy.travel.test.TestRunner;
-import pro.sdacademy.travel.test.TripOrdersTestCase;
-import pro.sdacademy.travel.test.TripTestCase;
+import pro.sdacademy.travel.test.*;
 
 import javax.persistence.EntityManager;
 
@@ -19,6 +17,7 @@ public class SDATravel implements AutoCloseable {
     private TripRepository tripRepository;
     private ClientRepository clientRepository;
     private TripOrderRepository tripOrderRepository;
+    private BillRepository billRepository;
 
     public SDATravel() {
         SessionFactory sessionFactory = new Configuration()
@@ -28,12 +27,14 @@ public class SDATravel implements AutoCloseable {
                 .addAnnotatedClass(Itinerary.class)
                 .addAnnotatedClass(Trip.class)
                 .addAnnotatedClass(TripOrder.class)
+                .addAnnotatedClass(Bill.class)
                 .buildSessionFactory();
 
         entityManager = sessionFactory.createEntityManager();
         tripRepository = new TripRepository(entityManager);
         clientRepository = new ClientRepository(entityManager);
         tripOrderRepository = new TripOrderRepository(entityManager);
+        billRepository = new BillRepository(entityManager);
     }
 
     public void run() {
@@ -45,6 +46,9 @@ public class SDATravel implements AutoCloseable {
 
         TripOrdersTestCase tripOrdersTestCase = new TripOrdersTestCase(tripOrderRepository, clientTestCase, tripTestCase);
         TestRunner.runTests(tripOrdersTestCase);
+
+        BillTestCase billTestCase = new BillTestCase(billRepository, clientTestCase, tripTestCase);
+        TestRunner.runTests(billTestCase);
     }
 
     @Override
