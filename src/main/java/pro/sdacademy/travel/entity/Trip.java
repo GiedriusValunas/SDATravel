@@ -9,7 +9,10 @@ public class Trip implements DbEntity<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String destination;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Itinerary itinerary;
+
     private Double price;
 
     @Override
@@ -21,12 +24,12 @@ public class Trip implements DbEntity<Integer> {
         this.id = id;
     }
 
-    public String getDestination() {
-        return destination;
+    public Itinerary getItinerary() {
+        return itinerary;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
+    public void setItinerary(Itinerary itinerary) {
+        this.itinerary = itinerary;
     }
 
     public Double getPrice() {
@@ -41,7 +44,7 @@ public class Trip implements DbEntity<Integer> {
     public String toString() {
         return "Trip{" +
                 "id=" + id +
-                ", destination='" + destination + '\'' +
+                ", itinerary=" + itinerary +
                 ", price=" + price +
                 '}';
     }

@@ -2,9 +2,7 @@ package pro.sdacademy.travel;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import pro.sdacademy.travel.entity.Client;
-import pro.sdacademy.travel.entity.Trip;
-import pro.sdacademy.travel.entity.TripOrder;
+import pro.sdacademy.travel.entity.*;
 import pro.sdacademy.travel.repository.ClientRepository;
 import pro.sdacademy.travel.repository.TripOrderRepository;
 import pro.sdacademy.travel.repository.TripRepository;
@@ -26,6 +24,8 @@ public class SDATravel implements AutoCloseable {
         SessionFactory sessionFactory = new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(Client.class)
+                .addAnnotatedClass(Destination.class)
+                .addAnnotatedClass(Itinerary.class)
                 .addAnnotatedClass(Trip.class)
                 .addAnnotatedClass(TripOrder.class)
                 .buildSessionFactory();
@@ -38,11 +38,13 @@ public class SDATravel implements AutoCloseable {
 
     public void run() {
         ClientTestCase clientTestCase = new ClientTestCase(clientRepository);
-//        TestRunner.runTests(clientTestCase);
+        TestRunner.runTests(clientTestCase);
+
         TripTestCase tripTestCase = new TripTestCase(tripRepository);
-//        TestRunner.runTests(tripTestCase);
-        TestRunner.runTests(new TripOrdersTestCase(tripOrderRepository, clientTestCase, tripTestCase));
-        clientRepository.findAll().forEach(System.out::println);
+        TestRunner.runTests(tripTestCase);
+
+        TripOrdersTestCase tripOrdersTestCase = new TripOrdersTestCase(tripOrderRepository, clientTestCase, tripTestCase);
+        TestRunner.runTests(tripOrdersTestCase);
     }
 
     @Override
