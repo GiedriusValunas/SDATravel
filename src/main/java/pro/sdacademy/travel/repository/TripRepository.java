@@ -9,16 +9,6 @@ import java.util.Optional;
 public class TripRepository extends AbstractCRUDRepository<Integer, Trip> {
 
     public TripRepository(EntityManager entityManager) {
-        super(entityManager);
-    }
-
-    @Override
-    public Optional<Trip> find(Integer id) {
-        return Optional.ofNullable(entityManager.find(Trip.class, id));
-    }
-
-    @Override
-    public List<Trip> findAll() {
-        return entityManager.createQuery("FROM Trip", Trip.class).getResultList();
+        super(entityManager, Trip.class);
     }
 }

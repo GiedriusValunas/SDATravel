@@ -4,13 +4,17 @@ import pro.sdacademy.travel.entity.DbEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.util.List;
+import java.util.Optional;
 
 public abstract class AbstractCRUDRepository<ID, T extends DbEntity<ID>> implements CRUDRepository<ID, T> {
 
     protected final EntityManager entityManager;
+    private Class<T> entityClass;
 
-    protected AbstractCRUDRepository(EntityManager entityManager) {
+    protected AbstractCRUDRepository(EntityManager entityManager, Class<T> entityClass) {
         this.entityManager = entityManager;
+        this.entityClass = entityClass;
     }
 
     @Override
@@ -19,6 +23,16 @@ public abstract class AbstractCRUDRepository<ID, T extends DbEntity<ID>> impleme
         transaction.begin();
         entityManager.persist(entity);
         transaction.commit();
+    }
+
+    @Override
+    public Optional<T> find(ID id) {
+        return Optional.ofNullable(entityManager.find(entityClass, id));
+    }
+
+    @Override
+    public List<T> findAll() {
+        return entityManager.createQuery("FROM " + entityClass.getSimpleName(), entityClass).getResultList();
     }
 
     @Override
