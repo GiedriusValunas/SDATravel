@@ -1,6 +1,7 @@
 package pro.sdacademy.travel.test;
 
 import pro.sdacademy.travel.entity.Bill;
+import pro.sdacademy.travel.entity.Client;
 import pro.sdacademy.travel.repository.BillRepository;
 
 import java.time.LocalDateTime;
@@ -18,8 +19,12 @@ public class BillTestCase extends BaseTestCase<Bill, BillRepository> {
 
     @Override
     public Bill testCreate() {
+        return testCreate(clientTestCase.testCreate());
+    }
+
+    private Bill testCreate(Client client) {
         Bill bill = new Bill();
-        bill.setClient(clientTestCase.testCreate());
+        bill.setClient(client);
         bill.setTrip(tripTestCase.testCreate());
         repository.save(bill);
         return bill;
@@ -29,5 +34,15 @@ public class BillTestCase extends BaseTestCase<Bill, BillRepository> {
     public void testUpdate(Bill bill) {
         bill.setCleared(LocalDateTime.now().plusDays(1));
         repository.save(bill);
+    }
+
+    public void extraTestFindBillsByClientId() {
+        Client client = clientTestCase.testCreate();
+        testCreate(client);
+        testCreate(client);
+        testCreate(client);
+        testCreate(client);
+        testCreate(client);
+        repository.findBillsByClientId(client.getId()).forEach(System.out::println);
     }
 }
