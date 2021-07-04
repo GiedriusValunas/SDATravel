@@ -16,4 +16,15 @@ public class BillRepository extends AbstractCRUDRepository<Integer, Bill> {
                 .setParameter(1, clientId)
                 .getResultList();
     }
+
+    public Double getTotalUnpaidAmountByClientId(Integer clientId) {
+        return entityManager.createQuery("" +
+                        "SELECT SUM(b.trip.price) " +
+                        "FROM Bill b " +
+//                        "JOIN b.trip " +
+                        "WHERE b.client.id = ?1 AND b.cleared IS NULL",
+                Double.class)
+                .setParameter(1, clientId)
+                .getSingleResult();
+    }
 }

@@ -45,4 +45,12 @@ public class BillTestCase extends BaseTestCase<Bill, BillRepository> {
         testCreate(client);
         repository.findBillsByClientId(client.getId()).forEach(System.out::println);
     }
+
+    public void extraTestGetTotalUnpaidAmountByClientId() {
+        Client client = clientTestCase.testCreate();
+        testCreate(client);
+        testCreate(client);
+        testCreate(client);
+        System.out.printf("Amount: %.2f%n", repository.getTotalUnpaidAmountByClientId(client.getId()));
+    }
 }
