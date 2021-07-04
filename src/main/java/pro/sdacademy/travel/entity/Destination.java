@@ -15,7 +15,7 @@ public class Destination implements DbEntity<UUID> {
     @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     public Destination(String name) {

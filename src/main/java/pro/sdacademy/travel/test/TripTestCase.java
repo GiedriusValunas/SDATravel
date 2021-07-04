@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 
 public class TripTestCase extends BaseTestCase<Trip, TripRepository> {
 
+    private final Destination destinationFrom = new Destination("LT");
+    private final Destination destinationTo = new Destination("UK");
+
     public TripTestCase(TripRepository repository) {
         super(repository);
     }
@@ -16,16 +19,16 @@ public class TripTestCase extends BaseTestCase<Trip, TripRepository> {
     @Override
     public Trip testCreate() {
         Trip trip = new Trip();
-        trip.setItinerary(createItinerary("LT", "UK"));
+        trip.setItinerary(createItinerary());
         trip.setPrice(999.99);
         repository.save(trip);
         return trip;
     }
 
-    private Itinerary createItinerary(String from, String to) {
+    private Itinerary createItinerary() {
         Itinerary itinerary = new Itinerary();
-        itinerary.setDestinationFrom(new Destination(from));
-        itinerary.setDestinationTo(new Destination(to));
+        itinerary.setDestinationFrom(destinationFrom);
+        itinerary.setDestinationTo(destinationTo);
         itinerary.setTravelDateTime(LocalDateTime.now());
         return itinerary;
     }
