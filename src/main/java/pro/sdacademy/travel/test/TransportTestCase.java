@@ -1,7 +1,7 @@
 package pro.sdacademy.travel.test;
 
-import pro.sdacademy.travel.entity.Destination;
 import pro.sdacademy.travel.entity.Transport;
+import pro.sdacademy.travel.repository.DestinationRepository;
 import pro.sdacademy.travel.repository.TransportRepository;
 
 import java.util.Arrays;
@@ -11,8 +11,11 @@ import static pro.sdacademy.travel.entity.Transport.TransportType.BUS;
 
 public class TransportTestCase extends BaseTestCase<Transport, TransportRepository> {
 
-    public TransportTestCase(TransportRepository repository) {
+    private final DestinationRepository destinationRepository;
+
+    public TransportTestCase(TransportRepository repository, DestinationRepository destinationRepository) {
         super(repository);
+        this.destinationRepository = destinationRepository;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class TransportTestCase extends BaseTestCase<Transport, TransportReposito
         transport.setNumber("ABC123");
         transport.setType(BUS);
         transport.setDestinations(Arrays.stream(destinationName)
-                .map(Destination::new)
+                .map(destinationRepository::getOrCreateDestinationByName)
                 .collect(Collectors.toSet()));
         repository.save(transport);
         return transport;

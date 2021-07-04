@@ -16,6 +16,7 @@ public class SDATravel implements AutoCloseable {
     private final ClientRepository clientRepository;
     private final TransportRepository transportRepository;
     private final TripOrderRepository tripOrderRepository;
+    private final DestinationRepository destinationRepository;
 
     public SDATravel() {
         SessionFactory sessionFactory = new Configuration()
@@ -35,15 +36,15 @@ public class SDATravel implements AutoCloseable {
         clientRepository = new ClientRepository(entityManager);
         transportRepository = new TransportRepository(entityManager);
         tripOrderRepository = new TripOrderRepository(entityManager);
-
+        destinationRepository = new DestinationRepository(entityManager);
     }
 
     public void run() {
         TripTestCase tripTestCase = new TripTestCase(tripRepository);
         ClientTestCase clientTestCase = new ClientTestCase(clientRepository);
-        TransportTestCase transportTestCase = new TransportTestCase(transportRepository);
 
         BillTestCase billTestCase = new BillTestCase(billRepository, clientTestCase, tripTestCase);
+        TransportTestCase transportTestCase = new TransportTestCase(transportRepository, destinationRepository);
         TripOrdersTestCase tripOrdersTestCase = new TripOrdersTestCase(tripOrderRepository, clientTestCase, tripTestCase);
 
         TestRunner.runTests(
